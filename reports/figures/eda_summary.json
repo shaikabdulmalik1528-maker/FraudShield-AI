@@ -1,0 +1,48 @@
+{
+  "dataset_rows": 284807,
+  "dataset_columns": 31,
+  "missing_values": 0,
+  "duplicate_records": 1081,
+  "duplicate_pct": 0.38,
+  "legitimate_count": 284315,
+  "fraudulent_count": 492,
+  "fraud_percentage": 0.1727,
+  "amount_statistics": {
+    "legitimate": {
+      "count": 284315.0,
+      "mean": 88.29,
+      "std": 250.11,
+      "min": 0.0,
+      "25%": 5.65,
+      "50%": 22.0,
+      "75%": 77.05,
+      "max": 25691.16
+    },
+    "fraudulent": {
+      "count": 492.0,
+      "mean": 122.21,
+      "std": 256.68,
+      "min": 0.0,
+      "25%": 1.0,
+      "50%": 9.25,
+      "75%": 105.89,
+      "max": 2125.87
+    }
+  },
+  "top_correlated_features": {
+    "positive": {
+      "V19": 0.0348,
+      "V21": 0.0404,
+      "V2": 0.0913,
+      "V4": 0.1334,
+      "V11": 0.1549
+    },
+    "negative": {
+      "V17": -0.3265,
+      "V14": -0.3025,
+      "V12": -0.2606,
+      "V10": -0.2169,
+      "V16": -0.1965
+    }
+  }
+}

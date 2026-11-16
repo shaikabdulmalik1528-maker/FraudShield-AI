@@ -1,0 +1,149 @@
+"""
+Comprehensive Backend Test Suite.
+Tests health endpoints, input validation, authentication,
+predict endpoints, database operations, and risk scoring.
+"""
+
+import pytest
+from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
+
+from backend.app.main import app
+from backend.app.database import Base, get_db
+from backend.app.services.fraud_engine import fraud_engine
+from backend.app.services.auth_service import get_password_hash
+from backend.app.models.user import User
+import backend.app.models.transaction
+import backend.app.models.alert
+import backend.app.models.log
+import backend.app.models.metric
+
+# Use StaticPool with in-memory SQLite so all sessions share the exact same in-memory DB
+SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool
+)
+TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+def override_get_db():
+    db = TestingSessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+app.dependency_overrides[get_db] = override_get_db
+
+@pytest.fixture(scope="session", autouse=True)
+def setup_test_db():
+    Base.metadata.create_all(bind=engine)
+    fraud_engine.load_artifacts()
+    
+    # Create test analyst user
+    db = TestingSessionLocal()
+    user = User(
+        username="testanalyst",
+        email="test@fraudshield.ai",
+        hashed_password=get_password_hash("TestPass123!"),
+        role="admin",
+        is_active=True
+    )
+    db.add(user)
+    db.commit()
+    db.close()
+    yield
+    Base.metadata.drop_all(bind=engine)
+
+@pytest.fixture
+def client():
+    return TestClient(app)
+
+def test_health_check(client):
+    """Test health check returns 200 and operational status."""
+    response = client.get("/health")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "healthy"
+    assert "service" in data
+
+def test_model_info_endpoint(client):
+    """Test model info endpoint returns champion metadata."""
+    response = client.get("/api/v1/model/info")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "active"
+    assert "champion_model" in data
+    assert "active_threshold" in data
+
+def test_authentication_flow(client):
+    """Test valid and invalid login attempts."""
+    # Valid login
+    res = client.post("/api/v1/auth/login", data={"username": "testanalyst", "password": "TestPass123!"})
+    assert res.status_code == 200
+    token_data = res.json()
+    assert "access_token" in token_data
+    token = token_data["access_token"]
+
+    # Profile check with Bearer token
+    profile_res = client.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {token}"})
+    assert profile_res.status_code == 200
+    assert profile_res.json()["username"] == "testanalyst"
+
+    # Invalid login
+    bad_res = client.post("/api/v1/auth/login", data={"username": "testanalyst", "password": "WrongPassword"})
+    assert bad_res.status_code == 401
+
+def test_predict_endpoint_valid(client):
+    """Test real-time prediction with genuine PCA transaction features."""
+    payload = {
+        "Time": 406.0,
+        "Amount": 149.62,
+        "V1": -2.312, "V2": 1.951, "V3": -1.609, "V4": 3.997, "V5": -0.522,
+        "V6": -1.426, "V7": -2.537, "V8": 1.391, "V9": -2.770, "V10": -2.772,
+        "V11": 3.202, "V12": -2.899, "V13": -0.595, "V14": -4.289, "V15": 0.389,
+        "V16": -1.140, "V17": -2.830, "V18": -0.016, "V19": 0.416, "V20": 0.126,
+        "V21": 0.517, "V22": -0.035, "V23": -0.465, "V24": 0.320, "V25": 0.044,
+        "V26": 0.177, "V27": 0.261, "V28": -0.143
+    }
+    response = client.post("/api/v1/predict", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert "transaction_id" in data
+    assert "fraud_probability" in data
+    assert "risk_score" in data
+    assert data["risk_category"] in ["LOW", "MEDIUM", "HIGH"]
+    assert data["prediction"] in ["LEGITIMATE", "SUSPICIOUS"]
+    assert "explanation" in data
+    assert "top_features" in data["explanation"]
+
+def test_predict_endpoint_invalid_input(client):
+    """Test input validation: missing fields and negative amount."""
+    # Negative amount
+    bad_payload = {"Time": 100.0, "Amount": -50.0}
+    response = client.post("/api/v1/predict", json=bad_payload)
+    assert response.status_code == 422 # Pydantic Unprocessable Entity
+
+def test_transactions_listing_and_filtering(client):
+    """Test transaction history listing and pagination."""
+    response = client.get("/api/v1/transactions?page=1&page_size=10")
+    assert response.status_code == 200
+    data = response.json()
+    assert "items" in data
+    assert "total" in data
+
+def test_analytics_endpoints(client):
+    """Test overview and trend analytics."""
+    overview_res = client.get("/api/v1/analytics/overview")
+    assert overview_res.status_code == 200
+    overview = overview_res.json()
+    assert "total_transactions" in overview
+    assert "fraud_rate_pct" in overview
+
+    perf_res = client.get("/api/v1/analytics/model-performance")
+    assert perf_res.status_code == 200
+    perf = perf_res.json()
+    assert "champion_model" in perf
