@@ -3,10 +3,16 @@ import { X, Shield, Lock, User as UserIcon, AlertCircle } from 'lucide-react';
 import { login, getCurrentUser } from '../services/api';
 
 export default function Login({ onClose, onLoginSuccess }) {
-  const [username, setUsername] = useState('admin');
-  const [password, setPassword] = useState('AdminPass123!');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const handleFillDemo = () => {
+    setUsername('admin');
+    setPassword('AdminPass123!');
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -87,9 +93,17 @@ export default function Login({ onClose, onLoginSuccess }) {
             </div>
           </div>
 
-          <div className="p-2.5 rounded-lg bg-navy-850 border border-navy-800 text-[11px] text-slate-400">
-            Default credentials pre-filled: <span className="text-cyan-400 font-mono">admin</span> / <span className="text-cyan-400 font-mono">AdminPass123!</span>
+          <div className="flex items-center justify-between p-2.5 rounded-lg bg-navy-850 border border-navy-800 text-[11px] text-slate-400">
+            <span>Demo: <span className="text-cyan-400 font-mono">admin</span></span>
+            <button
+              type="button"
+              onClick={handleFillDemo}
+              className="px-2 py-0.5 rounded bg-navy-800 hover:bg-navy-700 text-cyan-300 font-medium transition-colors"
+            >
+              Fill Demo Login
+            </button>
           </div>
+
 
           <button
             type="submit"

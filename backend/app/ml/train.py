@@ -57,18 +57,20 @@ def train_and_evaluate_all(
     fraud_pct = (n_fraud / total_rows) * 100.0
     logger.info(f"Dataset Loaded: {total_rows:,} rows | Fraud: {n_fraud:,} ({fraud_pct:.3f}%)")
 
-    # 2. Stratified train/test split strictly BEFORE scaling or SMOTE
-    X_train_df, X_test_df, y_train, y_test = prepare_stratified_split(
-        df, test_size=0.2, random_state=random_state
+    # 2. Stratified train/val/test split strictly BEFORE scaling or SMOTE
+    X_train_df, X_val_df, X_test_df, y_train, y_val, y_test = prepare_stratified_split(
+        df, test_size=0.15, val_size=0.15, random_state=random_state
     )
 
     # 3. Fit Preprocessing Pipeline strictly on training features
     preprocessor = FraudDataPreprocessor()
     preprocessor.fit(X_train_df)
     X_train_scaled = preprocessor.transform(X_train_df)
+    X_val_scaled = preprocessor.transform(X_val_df)
     X_test_scaled = preprocessor.transform(X_test_df)
 
     y_train_arr = y_train.to_numpy()
+    y_val_arr = y_val.to_numpy()
     y_test_arr = y_test.to_numpy()
 
     # Optional SMOTE experiment on training split only
@@ -128,25 +130,26 @@ def train_and_evaluate_all(
         model.fit(X_train_model, y_train_model)
         train_duration = (datetime.now() - start_time).total_seconds()
 
-        # Predict probabilities for positive class (Fraud = 1)
-        y_test_proba = model.predict_proba(X_test_scaled)[:, 1]
-
-        # Optimize decision threshold to balance precision and recall
-        opt_threshold, opt_f1 = find_optimal_threshold(y_test_arr, y_test_proba, beta=1.0)
+        # 1. Tune decision threshold strictly on the VALIDATION split
+        y_val_proba = model.predict_proba(X_val_scaled)[:, 1]
+        opt_threshold, opt_f1 = find_optimal_threshold(y_val_arr, y_val_proba, beta=1.0)
         
-        # Calculate full suite of metrics at optimal threshold
+        # 2. Evaluate unbiased metrics on the untouched HELD-OUT TEST split at the validation threshold
+        y_test_proba = model.predict_proba(X_test_scaled)[:, 1]
         metrics = evaluate_predictions(y_test_arr, y_test_proba, threshold=opt_threshold)
         metrics["training_time_sec"] = round(train_duration, 2)
         metrics["optimal_threshold"] = opt_threshold
+        metrics["val_f1_score"] = round(float(opt_f1), 4)
 
         results[name] = metrics
         fitted_models[name] = model
 
         logger.info(
-            f"    [{name}] PR-AUC: {metrics['pr_auc']:.4f} | ROC-AUC: {metrics['roc_auc']:.4f} | "
-            f"F1: {metrics['f1_score']:.4f} | Precision: {metrics['precision']:.4f} | "
-            f"Recall: {metrics['recall']:.4f} (Threshold: {opt_threshold:.3f})"
+            f"    [{name}] Test PR-AUC: {metrics['pr_auc']:.4f} | Test ROC-AUC: {metrics['roc_auc']:.4f} | "
+            f"Test F1: {metrics['f1_score']:.4f} | Val F1: {metrics['val_f1_score']:.4f} | "
+            f"Precision: {metrics['precision']:.4f} | Recall: {metrics['recall']:.4f} (Val Threshold: {opt_threshold:.3f})"
         )
+
 
     # 6. Train Unsupervised Anomaly Detector (Isolation Forest)
     logger.info("--> Training Unsupervised Isolation Forest...")

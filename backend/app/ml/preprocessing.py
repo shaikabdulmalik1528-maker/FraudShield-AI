@@ -85,26 +85,42 @@ def load_and_clean_data(file_path: str) -> pd.DataFrame:
 
 def prepare_stratified_split(
     df: pd.DataFrame,
-    test_size: float = 0.2,
+    test_size: float = 0.15,
+    val_size: float = 0.15,
     random_state: int = 42
-) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
+) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.Series, pd.Series, pd.Series]:
     """
-    Performs stratified train/test split strictly BEFORE any SMOTE or scaling
-    to prevent target and distribution leakage.
+    Performs 3-way stratified train/val/test split strictly BEFORE any SMOTE or scaling.
+    This guarantees zero data leakage:
+    - Train split: Used solely for model parameter learning and scaler fitting.
+    - Validation split: Used solely for hyperparameter comparison and threshold tuning.
+    - Test split: Pure held-out benchmark data evaluated at the validation-selected threshold.
     """
     X = df[FEATURE_COLUMNS]
     y = df[TARGET_COLUMN].astype(int)
     
-    X_train, X_test, y_train, y_test = train_test_split(
+    # First split off the final held-out test set
+    X_temp, X_test, y_temp, y_test = train_test_split(
         X, y,
         test_size=test_size,
         random_state=random_state,
         stratify=y
     )
     
+    # From remaining, split off the validation set
+    val_ratio = val_size / (1.0 - test_size)
+    X_train, X_val, y_train, y_val = train_test_split(
+        X_temp, y_temp,
+        test_size=val_ratio,
+        random_state=random_state,
+        stratify=y_temp
+    )
+    
     logger.info(f"Training split: {X_train.shape[0]} samples (Fraud: {y_train.sum()}, Legit: {(y_train == 0).sum()})")
+    logger.info(f"Validation split: {X_val.shape[0]} samples (Fraud: {y_val.sum()}, Legit: {(y_val == 0).sum()})")
     logger.info(f"Test split: {X_test.shape[0]} samples (Fraud: {y_test.sum()}, Legit: {(y_test == 0).sum()})")
-    return X_train, X_test, y_train, y_test
+    return X_train, X_val, X_test, y_train, y_val, y_test
+
 
 def apply_smote_resampling(
     X_train: np.ndarray,

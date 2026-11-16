@@ -21,21 +21,21 @@ services:
 
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./backend/Dockerfile
     container_name: fraudshield-backend
     restart: always
     environment:
       - DATABASE_URL=postgresql://postgres:postgrespassword@db:5432/fraudshield_db
       - DEBUG=False
-      - SECRET_KEY=production-secure-key-docker-change-me
+      - SECRET_KEY=production-secure-key-docker-change-me-at-least-32-chars
     ports:
       - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
     volumes:
-      - ./backend/artifacts:/app/artifacts
+      - ./backend/artifacts:/app/backend/artifacts
 
   frontend:
     build:

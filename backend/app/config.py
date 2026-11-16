@@ -20,6 +20,16 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "fraudshield-super-secure-production-ready-jwt-secret-key-change-in-prod-2026"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
+
+    @field_validator("SECRET_KEY", mode="after")
+    @classmethod
+    def validate_secret_key(cls, v: str, info) -> str:
+        app_env = info.data.get("APP_ENV", "development")
+        if app_env.lower() == "production":
+            if "change-in-prod" in v or len(v) < 32:
+                raise ValueError("In production mode, SECRET_KEY must be a cryptographically secure secret (minimum 32 chars).")
+        return v
+
     
     # Database
     DATABASE_URL: str = f"sqlite:///{BASE_DIR}/fraudshield.db"
