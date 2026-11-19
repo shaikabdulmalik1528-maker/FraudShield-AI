@@ -71,7 +71,15 @@ frontend/dist-ssr/
 .DS_Store
 Thumbs.db
 
-# Logs
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs and runtime audit files
+logs/
+backend/logs/
+*.jsonl
 *.log
 npm-debug.log*
 yarn-debug.log*
