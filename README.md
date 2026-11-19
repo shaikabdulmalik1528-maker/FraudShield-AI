@@ -15,8 +15,21 @@ An enterprise-ready, dual-engine fraud detection platform combining real-time fi
 
 ---
 
+## 🚀 Live Demo
+
+**Experience FraudShield AI 3.0**
+
+🌐 **Live Application:** [https://lush-fraud-shield-pulse.base44.app](https://lush-fraud-shield-pulse.base44.app)
+
+💻 **GitHub Source Code:** [https://github.com/shaikabdulmalik1528-maker/FraudShield-AI](https://github.com/shaikabdulmalik1528-maker/FraudShield-AI)
+
+Explore the live FraudShield AI platform and its fraud detection capabilities.
+
+---
+
 ## Table of Contents
 
+- [🚀 Live Demo](#-live-demo)
 - [1. Project Overview](#1-project-overview)
 - [2. Key Features](#2-key-features)
 - [3. System Architecture](#3-system-architecture)
