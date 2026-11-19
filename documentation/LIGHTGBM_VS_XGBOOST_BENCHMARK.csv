@@ -1,0 +1,3 @@
+Model Architecture,Monotonic Constraints,Optimal Threshold,ROC-AUC,PR-AUC,Precision,Recall,F1-Score,FPR,P50 Latency,P99 Latency
+FraudShield 3.0 (LightGBM),"YES (Burst, Ratio, C1-C3)",0.7,0.9716,0.8086,81.99%,68.49%,0.7463,0.561%,3.40 ms,6.22 ms
+Matched Baseline (XGBoost),NO,0.7,0.9707,0.8042,82.12%,67.58%,0.7414,0.549%,7.82 ms,12.43 ms

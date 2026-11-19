@@ -1,0 +1,35 @@
+{
+  "active_version": "3.0.0",
+  "rollback_target": "3.0.0-rc1",
+  "updated_at": "2026-11-17T17:39:21.895721+00:00",
+  "versions": [
+    {
+      "version": "3.0.0",
+      "created_at": "2026-11-17T08:43:04.632714+00:00",
+      "is_active": true,
+      "model_file": "lightgbm_fraudshield_v3.joblib",
+      "preprocessor_file": "v3_preprocessor.joblib",
+      "threshold": 0.7,
+      "roc_auc": 0.9716,
+      "pr_auc": 0.8086,
+      "f1_score": 0.7463,
+      "monotonic_constraints_enforced": true,
+      "sha256": "1b1030edcf79c7ed05cc752880a846420cbd1525db347257acfc3fdab3c01924",
+      "description": "Production FraudShield 3.0 LightGBM with monotonic constraints on velocity."
+    },
+    {
+      "version": "3.0.0-rc1",
+      "created_at": "2026-11-17T08:43:04.632714+00:00",
+      "is_active": false,
+      "model_file": "lightgbm_fraudshield_v3.joblib",
+      "preprocessor_file": "v3_preprocessor.joblib",
+      "threshold": 0.68,
+      "roc_auc": 0.968,
+      "pr_auc": 0.795,
+      "f1_score": 0.732,
+      "monotonic_constraints_enforced": true,
+      "sha256": "1b1030edcf79c7ed05cc752880a846420cbd1525db347257acfc3fdab3c01924",
+      "description": "Pre-production candidate RC1."
+    }
+  ]
+}

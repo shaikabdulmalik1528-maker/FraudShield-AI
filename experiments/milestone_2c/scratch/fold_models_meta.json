@@ -1,0 +1,32 @@
+[
+  {
+    "fold": 1,
+    "train_samples": 158886,
+    "val_samples": 39722,
+    "roc_auc": 0.973627361979692
+  },
+  {
+    "fold": 2,
+    "train_samples": 158886,
+    "val_samples": 39722,
+    "roc_auc": 0.9689167751756012
+  },
+  {
+    "fold": 3,
+    "train_samples": 158886,
+    "val_samples": 39722,
+    "roc_auc": 0.9940768983226598
+  },
+  {
+    "fold": 4,
+    "train_samples": 158887,
+    "val_samples": 39721,
+    "roc_auc": 0.9824153780905767
+  },
+  {
+    "fold": 5,
+    "train_samples": 158887,
+    "val_samples": 39721,
+    "roc_auc": 0.9880075499669497
+  }
+]

@@ -1,0 +1,51 @@
+{
+  "model_version": "3.0.0-rc1",
+  "timestamp_utc": "2026-11-17T07:11:32.934386+00:00",
+  "training_sample_size": 590540,
+  "enforce_monotonic": true,
+  "feature_count": 89,
+  "categorical_feature_count": 16,
+  "artifacts": {
+    "lightgbm_joblib": {
+      "file": "lightgbm_fraudshield_v3.joblib",
+      "sha256": "1b1030edcf79c7ed05cc752880a846420cbd1525db347257acfc3fdab3c01924"
+    },
+    "lightgbm_txt": {
+      "file": "lightgbm_fraudshield_v3.txt",
+      "sha256": "4480005fbd2f90aa456b8a926e23c1900458947146150d57f9f692163b261904"
+    },
+    "preprocessor_joblib": {
+      "file": "v3_preprocessor.joblib",
+      "sha256": "e83591346f24c1fc5b7f537d4d9177beedc4980c3702ba2e7c9e766cf51043c5"
+    },
+    "optimal_threshold_json": {
+      "file": "v3_optimal_threshold.json",
+      "sha256": "8e4a93b4346f54821c60e7923e9bbf1929a78d9ae28c7c8c7e3eb5651f128dcb"
+    }
+  },
+  "test_metrics": {
+    "threshold": 0.7,
+    "roc_auc": 0.9716,
+    "pr_auc": 0.8086,
+    "precision": 0.8199,
+    "recall": 0.6849,
+    "f1_score": 0.7463,
+    "fpr": 0.00561,
+    "fnr": 0.31511,
+    "specificity": 0.99439,
+    "true_positives": 2030,
+    "false_positives": 446,
+    "true_negatives": 78996,
+    "false_negatives": 934,
+    "total_samples": 82406,
+    "fraud_prevalence": 0.036
+  },
+  "latency_metrics": {
+    "latency_p50_ms": 4.469,
+    "latency_p90_ms": 6.4,
+    "latency_p95_ms": 6.637,
+    "latency_p99_ms": 7.165,
+    "latency_mean_ms": 5.135,
+    "iterations_measured": 1000
+  }
+}

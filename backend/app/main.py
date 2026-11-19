@@ -23,6 +23,7 @@ from backend.app.routes.transactions import router as transactions_router
 from backend.app.routes.alerts import router as alerts_router
 from backend.app.routes.analytics import router as analytics_router
 from backend.app.routes.model import router as model_router
+from backend.app.v3.routes import v3_predict_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -61,6 +62,12 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=[
+        "X-Process-Time-Ms",
+        "X-RateLimit-Limit",
+        "X-RateLimit-Remaining",
+        "X-RateLimit-Reset",
+    ],
 )
 
 # Global Request Timing & Audit Middleware
@@ -89,6 +96,10 @@ app.include_router(transactions_router, prefix=settings.API_V1_STR)
 app.include_router(alerts_router, prefix=settings.API_V1_STR)
 app.include_router(analytics_router, prefix=settings.API_V1_STR)
 app.include_router(model_router, prefix=settings.API_V1_STR)
+# FraudShield 3.0 Modernized API Routes
+from backend.app.v3.routes.health import router as v3_health_router
+app.include_router(v3_health_router)
+app.include_router(v3_predict_router)
 
 @app.get("/")
 def root():

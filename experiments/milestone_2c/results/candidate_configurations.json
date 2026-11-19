@@ -1,0 +1,147 @@
+{
+  "audit_version": "3.0.0",
+  "evaluation_scope": "Training and Validation Data Only (Test Split Strictly Quarantined)",
+  "production_baseline": {
+    "candidate_id": "ARCH_A_w75_c500",
+    "architecture": "A (Production Heuristic with Heuristic Floors)",
+    "parameters": {
+      "w_fraud": 0.75,
+      "w_anom": 0.25,
+      "cutoff": 50.0,
+      "xgb_threshold": 0.895
+    },
+    "validation_metrics": {
+      "tp": 60,
+      "fp": 14,
+      "fn": 11,
+      "tn": 42474,
+      "precision": 0.8108,
+      "recall": 0.8451,
+      "f1_score": 0.8276,
+      "fpr": 0.00033,
+      "brier_score": 0.003338,
+      "quantile_ece": 0.042072,
+      "medium_queue_pct": 0.519,
+      "high_precision_pct": 88.06
+    },
+    "bootstrap_95ci": {
+      "precision": [0.7143, 0.8907],
+      "recall": [0.7571, 0.9315],
+      "f1_score": [0.7552, 0.8905],
+      "fpr": [0.000188, 0.000518]
+    },
+    "fold_cv_stability": {
+      "mean_recall": 0.8216,
+      "std_recall": 0.0566,
+      "min_recall": 0.7273,
+      "mean_precision": 0.7601,
+      "std_precision": 0.0337,
+      "mean_f1": 0.7879
+    },
+    "gates_status": {
+      "gate_fold_stability": false,
+      "gate_recall_ge_80": true,
+      "gate_precision_ge_80": true,
+      "gate_fpr_le_0_05": true,
+      "gate_medium_queue_le_1": true,
+      "gate_high_precision_ge_85": true,
+      "gate_ece_reduction_ge_15": false
+    }
+  },
+  "top_calibrated_candidate": {
+    "candidate_id": "ARCH_C_log_c500",
+    "architecture": "C (Logistic Meta-Calibrator)",
+    "description": "Transforms logit(P_xgb) and S_iforest via logistic model trained on 5-fold OOF data",
+    "parameters": {
+      "cutoff": 50.0,
+      "calibrator_type": "LogisticRegression(solver=lbfgs, C=1.0)"
+    },
+    "validation_metrics": {
+      "tp": 58,
+      "fp": 2,
+      "fn": 13,
+      "tn": 42486,
+      "precision": 0.9667,
+      "recall": 0.8169,
+      "f1_score": 0.8855,
+      "fpr": 0.000047,
+      "brier_score": 0.000344,
+      "quantile_ece": 0.000202,
+      "medium_queue_pct": 0.012,
+      "high_precision_pct": 98.28
+    },
+    "bootstrap_95ci": {
+      "precision": [0.9155, 1.0],
+      "recall": [0.7187, 0.9032],
+      "f1_score": [0.8197, 0.9381],
+      "fpr": [0.0, 0.000118]
+    },
+    "fold_cv_stability": {
+      "mean_recall": 0.7793,
+      "std_recall": 0.0419,
+      "min_recall": 0.7273,
+      "mean_precision": 0.9127,
+      "std_precision": 0.0339,
+      "mean_f1": 0.8402
+    },
+    "gates_status": {
+      "gate_fold_stability": false,
+      "gate_recall_ge_80": true,
+      "gate_precision_ge_80": true,
+      "gate_fpr_le_0_05": true,
+      "gate_medium_queue_le_1": true,
+      "gate_high_precision_ge_85": true,
+      "gate_ece_reduction_ge_15": true
+    },
+    "calibration_improvement": {
+      "brier_reduction_pct": 89.7,
+      "ece_reduction_pct": 99.52
+    }
+  },
+  "high_recall_calibrated_candidate": {
+    "candidate_id": "ARCH_C_log_c400",
+    "architecture": "C (Logistic Meta-Calibrator)",
+    "description": "Transforms logit(P_xgb) and S_iforest via logistic model trained on 5-fold OOF data with sensitive 40.0 cutoff",
+    "parameters": {
+      "cutoff": 40.0
+    },
+    "validation_metrics": {
+      "tp": 59,
+      "fp": 4,
+      "fn": 12,
+      "tn": 42484,
+      "precision": 0.9365,
+      "recall": 0.831,
+      "f1_score": 0.8806,
+      "fpr": 0.000094,
+      "brier_score": 0.000344,
+      "quantile_ece": 0.000202,
+      "medium_queue_pct": 0.012,
+      "high_precision_pct": 98.28
+    },
+    "bootstrap_95ci": {
+      "precision": [0.8654, 0.9836],
+      "recall": [0.7385, 0.9155],
+      "f1_score": [0.8148, 0.9344],
+      "fpr": [0.000024, 0.000188]
+    },
+    "fold_cv_stability": {
+      "mean_recall": 0.7884,
+      "std_recall": 0.0412,
+      "min_recall": 0.7273,
+      "mean_precision": 0.9103,
+      "std_precision": 0.0393,
+      "mean_f1": 0.8443
+    },
+    "gates_status": {
+      "gate_fold_stability": false,
+      "gate_recall_ge_80": true,
+      "gate_precision_ge_80": true,
+      "gate_fpr_le_0_05": true,
+      "gate_medium_queue_le_1": true,
+      "gate_high_precision_ge_85": true,
+      "gate_ece_reduction_ge_15": true
+    }
+  },
+  "multiplicity_and_selection_bias_disclosure": "Bootstrap confidence intervals describe sampling variability around candidates on the validation set. They do NOT eliminate optimization selection bias arising from searching across 286 candidate configurations. Final operational claims require independent real-world external validation."
+}

@@ -5,6 +5,7 @@ Machine Learning Pipeline & Engine Unit Tests.
 import numpy as np
 import pandas as pd
 import pytest
+from sklearn.metrics import f1_score
 from backend.app.ml.preprocessing import FraudDataPreprocessor, FEATURE_COLUMNS
 from backend.app.ml.evaluation import evaluate_predictions, find_optimal_threshold
 from backend.app.ml.anomaly import AnomalyDetector
@@ -58,6 +59,65 @@ def test_optimal_threshold_tuning():
     best_thresh, best_f1 = find_optimal_threshold(y_true, y_prob)
     assert 0.05 <= best_thresh <= 0.90
     assert best_f1 > 0.0
+
+def test_optimal_threshold_unconstrained_below_max():
+    """Verify optimal threshold when peak F1 occurs naturally below 0.90 (no clipping)."""
+    # Classes with clear separation around 0.50
+    y_true = np.array([0, 0, 0, 0, 1, 1, 1, 1])
+    y_prob = np.array([0.10, 0.20, 0.30, 0.40, 0.55, 0.65, 0.75, 0.85])
+
+    details = find_optimal_threshold(y_true, y_prob, return_details=True)
+    assert not details["is_clipped"]
+    assert details["operational_threshold"] <= 0.90
+    assert details["operational_threshold"] == details["unconstrained_threshold"]
+    assert details["operational_f_score"] == details["unconstrained_f_score"]
+
+def test_optimal_threshold_unconstrained_above_max_clipping():
+    """Verify threshold clipping when unconstrained peak occurs above 0.90."""
+    # Peak F1 occurs at 0.95, but clipping must cap at 0.90
+    y_true = np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1])
+    y_prob = np.array([0.05, 0.10, 0.20, 0.30, 0.85, 0.88, 0.89, 0.92, 0.95, 0.98])
+
+    details = find_optimal_threshold(y_true, y_prob, return_details=True)
+    assert details["is_clipped"]
+    assert details["operational_threshold"] == 0.90
+    assert details["unconstrained_threshold"] > 0.90
+    # Operational F1 must be recalculated at 0.90
+    expected_f1 = f1_score(y_true, (y_prob >= 0.90).astype(int))
+    assert np.isclose(details["operational_f_score"], expected_f1, atol=1e-4)
+
+def test_optimal_threshold_recalculated_consistency():
+    """Verify returned operational threshold and F1 refer to the exact same operating point."""
+    y_true = np.array([0, 0, 0, 0, 0, 0, 0, 1, 1, 1])
+    y_prob = np.array([0.05, 0.10, 0.20, 0.30, 0.85, 0.88, 0.89, 0.92, 0.95, 0.98])
+
+    # Default 2-tuple return
+    thresh, f1 = find_optimal_threshold(y_true, y_prob)
+    assert thresh == 0.90
+    recalc_f1 = float(f1_score(y_true, (y_prob >= thresh).astype(int)))
+    assert np.isclose(f1, recalc_f1, atol=1e-5)
+
+def test_optimal_threshold_details_structure():
+    """Verify return_details dictionary contains all required fields and correct typing."""
+    y_true = np.array([0, 0, 1, 1])
+    y_prob = np.array([0.1, 0.2, 0.8, 0.9])
+
+    details = find_optimal_threshold(y_true, y_prob, return_details=True)
+    required_keys = [
+        "operational_threshold",
+        "operational_f_score",
+        "operational_precision",
+        "operational_recall",
+        "unconstrained_threshold",
+        "unconstrained_f_score",
+        "unconstrained_precision",
+        "unconstrained_recall",
+        "is_clipped",
+        "min_threshold",
+        "max_threshold"
+    ]
+    for k in required_keys:
+        assert k in details
 
 def test_fraud_engine_risk_calculation():
     """Verify hybrid risk engine properly aggregates supervised and unsupervised signals."""

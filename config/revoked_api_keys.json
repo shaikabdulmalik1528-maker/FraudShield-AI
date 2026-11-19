@@ -1,0 +1,28 @@
+{
+  "revoked_keys": [
+    {
+      "key_id": "key_partner_revoked_test",
+      "key_hash": "9775d829fd105c562a3fa03a2992afdd812bb42eae9927b707554c1af881d2ca",
+      "revoked_at": "2026-11-17T17:34:54.711203+00:00",
+      "reason": "Test suite verification of permanent revocation"
+    },
+    {
+      "key_id": "key_partner_exposed_revoked",
+      "key_hash": "aae60a677ed29979a288fef361b2a1cfd6c0d07df48735245b5697fb4fcaf246",
+      "revoked_at": "2026-11-17T17:37:03.777830+00:00",
+      "reason": "Compromised/exposed in conversation transcript"
+    },
+    {
+      "key_id": "key_gw_rot_01",
+      "key_hash": "9c3ed7e258f32e86b6cb4ef31b9be1db976f558e98310ca86941bcfecb10e47b",
+      "revoked_at": "2026-11-17T17:39:24.425981+00:00",
+      "reason": "Key rotation replacement"
+    },
+    {
+      "key_id": "key_admin_e0e5c987ffbf",
+      "key_hash": "27e8b77e510003da00b1b87f1fa5ff68c4898ea6d87e2a183583d795c4bb2f46",
+      "revoked_at": "2026-11-17T17:39:24.785241+00:00",
+      "reason": "Administrative revocation"
+    }
+  ]
+}

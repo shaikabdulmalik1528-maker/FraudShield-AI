@@ -1,0 +1,18 @@
+{
+  "dataset_samples": 42559,
+  "fraud_cases": 71,
+  "confusion_matrix": {
+    "tn": 42474,
+    "fp": 14,
+    "fn": 11,
+    "tp": 60
+  },
+  "precision": 0.8108,
+  "recall": 0.8451,
+  "f1_score": 0.8276,
+  "fpr": 0.00033,
+  "brier_score": 0.003338,
+  "ece": 0.042072,
+  "medium_queue_pct": 0.5193,
+  "high_tier_precision_pct": 88.06
+}

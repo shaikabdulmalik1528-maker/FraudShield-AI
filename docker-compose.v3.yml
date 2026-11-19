@@ -1,0 +1,61 @@
+version: "3.8"
+
+services:
+  # FraudShield 3.0 Real-Time FastAPI Serving Engine
+  fraudshield-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.v3
+    container_name: fraudshield-api-v3
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=production
+      - FRAUDSHIELD_REDIS_URL=redis://:fs3_redis_prod_secret@redis-store:6379/0
+      - FRAUDSHIELD_TOKEN_SALT=${FRAUDSHIELD_TOKEN_SALT:-fs3_prod_salt_salt_2026}
+      - FRAUDSHIELD_ADMIN_API_KEY=${FRAUDSHIELD_ADMIN_API_KEY:-fs3_admin_sec_prod_key_2026}
+      - FRAUDSHIELD_SERVICE_API_KEY=${FRAUDSHIELD_SERVICE_API_KEY:-fs3_service_gw_prod_key_2026}
+      - FRAUDSHIELD_ANALYST_API_KEY=${FRAUDSHIELD_ANALYST_API_KEY:-fs3_analyst_ui_prod_key_2026}
+    depends_on:
+      redis-store:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 4096M
+        reservations:
+          cpus: "0.5"
+          memory: 1024M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    volumes:
+      - app-logs:/app/logs
+
+  # Enterprise Redis 7.2 with AOF persistence
+  redis-store:
+    image: redis:7.2-alpine
+    container_name: fraudshield-redis-v3
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--requirepass", "fs3_redis_prod_secret"]
+    volumes:
+      - redis-data:/data
+      - ./config/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "fs3_redis_prod_secret", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  redis-data:
+    driver: local
+  app-logs:
+    driver: local

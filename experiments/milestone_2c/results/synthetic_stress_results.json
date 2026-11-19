@@ -1,0 +1,21 @@
+{
+  "scenario_a_micro_amount_fraud": {
+    "description": "71 confirmed fraud cases with perturbed micro-amounts ($0.01 - $5.00)",
+    "candidate_detection_rate": 0.8451,
+    "baseline_detection_rate": 0.8451,
+    "delta_pct": 0.0
+  },
+  "scenario_b_borderline_pca_fraud": {
+    "description": "71 confirmed fraud cases with 30% diluted V14/V10 vectors",
+    "candidate_detection_rate": 0.831,
+    "baseline_detection_rate": 0.831,
+    "delta_pct": 0.0
+  },
+  "scenario_c_legitimate_anomaly_burst": {
+    "description": "1,000 legitimate cardholder transactions with extreme $5k-$25k amounts",
+    "candidate_false_positive_rate": 0.0,
+    "baseline_false_positive_rate": 0.0,
+    "delta_pct": 0.0
+  },
+  "methodological_caveat": "Synthetic stress-tests measure controlled perturbation response; they do NOT prove real-world external generalization."
+}

@@ -1,0 +1,168 @@
+{
+  "concurrency_benchmarks": [
+    {
+      "concurrency": 1,
+      "total_requests": 100,
+      "successful_requests": 100,
+      "failed_requests": 0,
+      "success_rate_pct": 100.0,
+      "total_duration_sec": 0.67,
+      "throughput_tps": 150.37,
+      "latency_ms": {
+        "p50": 3.6,
+        "p90": 4.42,
+        "p95": 4.67,
+        "p99": 7.2,
+        "max": 50.54,
+        "mean": 4.24
+      }
+    },
+    {
+      "concurrency": 10,
+      "total_requests": 200,
+      "successful_requests": 200,
+      "failed_requests": 0,
+      "success_rate_pct": 100.0,
+      "total_duration_sec": 0.62,
+      "throughput_tps": 321.73,
+      "latency_ms": {
+        "p50": 14.04,
+        "p90": 20.76,
+        "p95": 24.71,
+        "p99": 91.27,
+        "max": 134.7,
+        "mean": 16.71
+      }
+    },
+    {
+      "concurrency": 25,
+      "total_requests": 250,
+      "successful_requests": 250,
+      "failed_requests": 0,
+      "success_rate_pct": 100.0,
+      "total_duration_sec": 0.72,
+      "throughput_tps": 345.8,
+      "latency_ms": {
+        "p50": 33.19,
+        "p90": 73.39,
+        "p95": 81.82,
+        "p99": 105.54,
+        "max": 159.97,
+        "mean": 39.62
+      }
+    },
+    {
+      "concurrency": 50,
+      "total_requests": 300,
+      "successful_requests": 300,
+      "failed_requests": 0,
+      "success_rate_pct": 100.0,
+      "total_duration_sec": 0.82,
+      "throughput_tps": 367.5,
+      "latency_ms": {
+        "p50": 66.77,
+        "p90": 107.0,
+        "p95": 122.13,
+        "p99": 145.14,
+        "max": 165.26,
+        "mean": 68.11
+      }
+    },
+    {
+      "concurrency": 100,
+      "total_requests": 400,
+      "successful_requests": 400,
+      "failed_requests": 0,
+      "success_rate_pct": 100.0,
+      "total_duration_sec": 0.96,
+      "throughput_tps": 418.74,
+      "latency_ms": {
+        "p50": 114.23,
+        "p90": 220.82,
+        "p95": 303.35,
+        "p99": 368.83,
+        "max": 412.71,
+        "mean": 131.92
+      }
+    }
+  ],
+  "chaos_security_tests": {
+    "missing_auth_401": true,
+    "invalid_auth_401": true,
+    "rbac_escalation_403": true,
+    "payload_too_large_413": true,
+    "malformed_payload_422": true
+  },
+  "model_lifecycle_tests": {
+    "reload_passed": true,
+    "rollback_passed": true,
+    "restore_passed": true,
+    "all_passed": true
+  },
+  "worker_resource_utilization": {
+    "initial": [
+      {
+        "pid": 3228,
+        "status": "running",
+        "cpu_percent": 0.0,
+        "memory_rss_mb": 27.23
+      },
+      {
+        "pid": 2996,
+        "status": "running",
+        "cpu_percent": 0.0,
+        "memory_rss_mb": 267.86
+      },
+      {
+        "pid": 12444,
+        "status": "running",
+        "cpu_percent": 0.0,
+        "memory_rss_mb": 267.56
+      },
+      {
+        "pid": 29040,
+        "status": "running",
+        "cpu_percent": 0.0,
+        "memory_rss_mb": 267.17
+      },
+      {
+        "pid": 16516,
+        "status": "running",
+        "cpu_percent": 0.0,
+        "memory_rss_mb": 267.44
+      }
+    ],
+    "post_stress": [
+      {
+        "pid": 3228,
+        "status": "running",
+        "cpu_percent": 0.0,
+        "memory_rss_mb": 27.23
+      },
+      {
+        "pid": 2996,
+        "status": "running",
+        "cpu_percent": 33.2,
+        "memory_rss_mb": 275.84
+      },
+      {
+        "pid": 12444,
+        "status": "running",
+        "cpu_percent": 0.0,
+        "memory_rss_mb": 276.73
+      },
+      {
+        "pid": 29040,
+        "status": "running",
+        "cpu_percent": 0.0,
+        "memory_rss_mb": 275.62
+      },
+      {
+        "pid": 16516,
+        "status": "running",
+        "cpu_percent": 0.0,
+        "memory_rss_mb": 274.91
+      }
+    ]
+  }
+}

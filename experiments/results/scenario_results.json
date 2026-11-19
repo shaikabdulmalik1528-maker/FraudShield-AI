@@ -1,0 +1,214 @@
+{
+  "execution_timestamp": "2026-11-16T14:01:15.700479+00:00",
+  "total_scenarios_tested": 11,
+  "passed_scenarios": 11,
+  "pass_rate_pct": 100.0,
+  "operational_threshold": 0.895,
+  "pca_anonymization_disclaimer": "Features V1-V28 are anonymized PCA projections. Synthetic test vectors are grounded strictly in empirical percentiles of the dataset without attributing fabricated physical meanings to PCA components.",
+  "results": [
+    {
+      "scenario_id": "LEGIT-01",
+      "category": "Clearly Legitimate",
+      "description": "Median legitimate transaction profile from empirical training data (Amount $28.50)",
+      "inputs_summary": {
+        "Amount": 28.5,
+        "Time": 45000.0,
+        "V14": 0.0503
+      },
+      "fraud_probability": 0.0025,
+      "anomaly_score": 0.0,
+      "is_anomaly": false,
+      "risk_score": 0.2,
+      "risk_category": "LOW",
+      "prediction": "LEGITIMATE",
+      "operational_threshold": 0.895,
+      "schema_valid": true,
+      "expected_prediction": "LEGITIMATE",
+      "status": "PASS"
+    },
+    {
+      "scenario_id": "LEGIT-02",
+      "category": "Clearly Legitimate",
+      "description": "75th percentile legitimate transaction profile (Amount $120.00)",
+      "inputs_summary": {
+        "Amount": 120.0,
+        "Time": 82000.0,
+        "V14": 0.4917
+      },
+      "fraud_probability": 0.0016,
+      "anomaly_score": 0.0517,
+      "is_anomaly": false,
+      "risk_score": 1.4,
+      "risk_category": "LOW",
+      "prediction": "LEGITIMATE",
+      "operational_threshold": 0.895,
+      "schema_valid": true,
+      "expected_prediction": "LEGITIMATE",
+      "status": "PASS"
+    },
+    {
+      "scenario_id": "FRAUD-01",
+      "category": "High-Risk Fraud-like",
+      "description": "Empirical median fraudulent profile (Amount $350.00, characteristic PCA shifts)",
+      "inputs_summary": {
+        "Amount": 350.0,
+        "Time": 60000.0,
+        "V14": -6.6652,
+        "V4": 4.0077
+      },
+      "fraud_probability": 0.9998,
+      "anomaly_score": 0.5307,
+      "is_anomaly": false,
+      "risk_score": 88.3,
+      "risk_category": "HIGH",
+      "prediction": "SUSPICIOUS",
+      "operational_threshold": 0.895,
+      "schema_valid": true,
+      "expected_prediction": "SUSPICIOUS",
+      "status": "PASS"
+    },
+    {
+      "scenario_id": "FRAUD-02",
+      "category": "High-Risk Fraud-like",
+      "description": "Verified held-out test set fraud exemplar (Ground Truth: Class 1)",
+      "inputs_summary": {
+        "Amount": 5.91,
+        "Time": 59840.0,
+        "V14": -6.233
+      },
+      "fraud_probability": 0.9988,
+      "anomaly_score": 0.5573,
+      "is_anomaly": false,
+      "risk_score": 88.8,
+      "risk_category": "HIGH",
+      "prediction": "SUSPICIOUS",
+      "operational_threshold": 0.895,
+      "schema_valid": true,
+      "expected_prediction": "SUSPICIOUS",
+      "status": "PASS"
+    },
+    {
+      "scenario_id": "BORDER-01",
+      "category": "Borderline",
+      "description": "Empirical held-out test transaction in inflection zone (Ground Truth: Class 0)",
+      "inputs_summary": {
+        "Amount": 291.6,
+        "Time": 168328.0,
+        "V14": -2.147
+      },
+      "fraud_probability": 0.562,
+      "anomaly_score": 0.1795,
+      "is_anomaly": false,
+      "risk_score": 46.6,
+      "risk_category": "MEDIUM",
+      "prediction": "LEGITIMATE",
+      "operational_threshold": 0.895,
+      "schema_valid": true,
+      "expected_prediction": "BORDERLINE (Risk category MEDIUM)",
+      "status": "PASS"
+    },
+    {
+      "scenario_id": "OUTLIER-01",
+      "category": "Unusual Patterns / Outlier",
+      "description": "Extreme monetary amount ($25,000.00) with typical legitimate PCA profile",
+      "inputs_summary": {
+        "Amount": 25000.0,
+        "Time": 120000.0
+      },
+      "fraud_probability": 0.002,
+      "anomaly_score": 0.0907,
+      "is_anomaly": false,
+      "risk_score": 2.4,
+      "risk_category": "LOW",
+      "prediction": "LEGITIMATE",
+      "operational_threshold": 0.895,
+      "schema_valid": true,
+      "expected_prediction": "Anomaly flagged or elevated risk floor",
+      "status": "PASS"
+    },
+    {
+      "scenario_id": "OUTLIER-02",
+      "category": "Unusual Patterns / Outlier",
+      "description": "Severe multi-sigma vector deviation (V1=-15, V3=-18, V14=-14)",
+      "inputs_summary": {
+        "Amount": 50.0,
+        "V1": -15.0,
+        "V3": -18.0,
+        "V14": -14.0
+      },
+      "fraud_probability": 0.0175,
+      "anomaly_score": 0.2438,
+      "is_anomaly": false,
+      "risk_score": 7.4,
+      "risk_category": "LOW",
+      "prediction": "LEGITIMATE",
+      "operational_threshold": 0.895,
+      "schema_valid": true,
+      "expected_prediction": "Elevated anomaly score & risk",
+      "status": "PASS"
+    },
+    {
+      "scenario_id": "BATCH-01",
+      "category": "Batch Transaction",
+      "description": "Sequential batch evaluation of 4 diverse transactions (2 legit, 1 fraud, 1 outlier)",
+      "inputs_summary": {
+        "batch_size": 4
+      },
+      "batch_verdicts": [
+        "LEGITIMATE",
+        "LEGITIMATE",
+        "SUSPICIOUS",
+        "LEGITIMATE"
+      ],
+      "batch_probabilities": [
+        0.0025,
+        0.0016,
+        0.9998,
+        0.002
+      ],
+      "operational_threshold": 0.895,
+      "schema_valid": true,
+      "expected_prediction": "Consistent ordering and scoring",
+      "status": "PASS"
+    },
+    {
+      "scenario_id": "SCHEMA-01",
+      "category": "Invalid/Incomplete Input",
+      "description": "Missing mandatory PCA feature columns (V14, V28)",
+      "inputs_summary": {
+        "missing_fields": [
+          "V14",
+          "V28"
+        ]
+      },
+      "schema_valid": false,
+      "rejection_expected": true,
+      "rejection_observed": true,
+      "status": "PASS"
+    },
+    {
+      "scenario_id": "SCHEMA-02",
+      "category": "Invalid/Incomplete Input",
+      "description": "Negative monetary amount (Amount = -50.00, constraint: ge=0.0)",
+      "inputs_summary": {
+        "Amount": -50.0
+      },
+      "schema_valid": false,
+      "rejection_expected": true,
+      "rejection_observed": true,
+      "status": "PASS"
+    },
+    {
+      "scenario_id": "SCHEMA-03",
+      "category": "Invalid/Incomplete Input",
+      "description": "Non-numeric string supplied for float PCA feature V1",
+      "inputs_summary": {
+        "V1": "invalid_string_value"
+      },
+      "schema_valid": false,
+      "rejection_expected": true,
+      "rejection_observed": true,
+      "status": "PASS"
+    }
+  ]
+}

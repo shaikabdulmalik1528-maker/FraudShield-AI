@@ -1,0 +1,13 @@
+{
+  "model_name": "FraudShield 3.0 (LightGBM)",
+  "optimal_threshold": 0.7,
+  "f1_score": 0.7463,
+  "precision": 0.8199,
+  "recall": 0.6849,
+  "roc_auc": 0.9716,
+  "pr_auc": 0.8086,
+  "validation_f1": 0.7319,
+  "updated_at": "2026-11-17T07:11:32.931393+00:00",
+  "sample_size": 590540,
+  "enforce_monotonic": true
+}

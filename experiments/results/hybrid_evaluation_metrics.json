@@ -1,0 +1,84 @@
+{
+  "evaluation_timestamp": "2026-11-16T15:55:17.740286+00:00",
+  "audit_version": "2.0.0",
+  "scope": "All 42,559 Held-Out Test Transactions",
+  "dataset_summary": {
+    "total_test_transactions": 42559,
+    "confirmed_legitimate": 42488,
+    "confirmed_fraudulent": 71,
+    "fraud_prevalence_pct": 0.1668
+  },
+  "production_engine_parameters": {
+    "xgboost_decision_threshold": 0.9,
+    "supervised_weight": 0.75,
+    "anomaly_weight": 0.25,
+    "suspicious_risk_cutoff": 50.0,
+    "low_risk_threshold": 30.0,
+    "high_risk_threshold": 75.0
+  },
+  "xgboost_standalone_metrics": {
+    "confusion_matrix": {
+      "tn": 42484,
+      "fp": 4,
+      "fn": 18,
+      "tp": 53
+    },
+    "accuracy": 0.999483,
+    "precision": 0.9298,
+    "recall": 0.7465,
+    "f1_score": 0.8281,
+    "specificity": 0.999906,
+    "false_positive_rate": 9.4e-05,
+    "false_negative_rate": 0.2535
+  },
+  "hybrid_fraud_engine_metrics": {
+    "confusion_matrix": {
+      "tn": 42469,
+      "fp": 19,
+      "fn": 13,
+      "tp": 58
+    },
+    "accuracy": 0.999248,
+    "precision": 0.7532,
+    "recall": 0.8169,
+    "f1_score": 0.7838,
+    "specificity": 0.999553,
+    "false_positive_rate": 0.000447,
+    "false_negative_rate": 0.1831
+  },
+  "comparative_deltas": {
+    "tp_gain_recovered_fraud": 5,
+    "fp_increase_false_alarms": 15,
+    "recall_gain_pct": 7.04,
+    "precision_drop_pct": -17.66,
+    "f1_score_delta": -0.0443,
+    "fpr_increase_pct": 0.0353
+  },
+  "risk_category_distribution": {
+    "overall": {
+      "low": 42271,
+      "medium": 228,
+      "high": 60
+    },
+    "legitimate_transactions": {
+      "low": 42258,
+      "medium": 224,
+      "high": 6
+    },
+    "fraudulent_transactions": {
+      "low": 13,
+      "medium": 4,
+      "high": 54
+    }
+  },
+  "escalated_transactions_summary": {
+    "total_escalated": 20,
+    "recovered_fraud_cases": 5,
+    "inadvertent_false_alarms": 15,
+    "csv_file": "C:\\Users\\LENOVO\\Desktop\\FraudShield-AI\\experiments\\results\\escalated_transactions.csv"
+  },
+  "visual_artifacts": {
+    "comparison_plot": "C:\\Users\\LENOVO\\Desktop\\FraudShield-AI\\experiments\\figures\\hybrid_vs_xgboost_comparison.png",
+    "risk_distribution_plot": "C:\\Users\\LENOVO\\Desktop\\FraudShield-AI\\experiments\\figures\\risk_score_distribution.png"
+  }
+}

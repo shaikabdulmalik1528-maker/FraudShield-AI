@@ -35,6 +35,10 @@ ENV/
 # Environment variables
 .env
 .env.local
+.env.sandbox
+.env.pilot
+.env.production
+.env.*.local
 
 # Database
 *.db
